@@ -29,16 +29,17 @@
 
 
 
-class Battery
+class cBattery
 {
 	public:
-		Battery();
+		cBattery();
 		bool run(double load,double resolution,double speed);
 		bool stop(void);
 		double getVout(void);
 		double getIout(void);
 		bool setCutOffVoltage(double cutoff);
 		double getElapsedTime(void);
+		bool addCell(cSingleBatt* AdCell);
 		char getSwitchStatus(int Cell);
 		bool IsRunning(void);
 		double getLoadResistance(void);
@@ -46,7 +47,7 @@ class Battery
 		bool getDropAmounts(void);
 
 	private:
-		SingleBatt *Cell[3];		///<Holds the cells that are added. @see addCell
+		cSingleBatt *Cell[3];		///<Holds the cells that are added. @see addCell
 		bool Switch[3];			///<A switch for each cell
 		double Vout;			///<Output voltage of the battery in Volts.
 		double Iout;			///<Output current of the battery in Ampere.
@@ -57,7 +58,7 @@ class Battery
 		std::mutex SimState;		///<Used to signal thread terminaton event
 		void runBattery(double load,double resolution,double speed);
 		bool ContinueRunning(void);
-		int count;			///<number of cells added in the battery
+		int count = 3;				///<number of cells added in the battery
 		std::mutex mtx; 		///<Lock to synchronize access to members from different thread and unlock
 
 		

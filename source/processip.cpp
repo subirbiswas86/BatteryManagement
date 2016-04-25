@@ -31,15 +31,15 @@ char processIP::getInput(void)
 	key[0] = '\0';
 	
 	len = getline(&buffer,&len, stdin);
-	std::cout <<len <<"\n";
+	//std::cout <<len <<"\n";
 	if(len <= 0)
 		return false;
 	
 	NumberofParam = sscanf(buffer,"%s%s%lf%lf%lf",command,key,&value[0],&value[1],&value[2]);
 	if(NumberofParam < 1)
 		return false;
-	std::cout <<NumberofParam << "\n";
-	std::cout <<command <<" " <<key <<" " <<value[0] <<" " <<value[1] <<" " <<value[2] <<"\n";
+	//std::cout <<NumberofParam << "\n";
+	//std::cout <<command <<" " <<key <<" " <<value[0] <<" " <<value[1] <<" " <<value[2] <<"\n";
 
 	delete []buffer;
 	
@@ -73,7 +73,7 @@ char processIP::ValidateInput(const char** validCommands, const char** validKeys
 			break;
 	}
 	CommandNumber = i;
-	std::cout <<"CommandNumber: " <<CommandNumber <<"\n";
+	//std::cout <<"CommandNumber: " <<CommandNumber <<"\n";
 
 	if(validKeys == (const char**)0)
 		return false;
@@ -89,12 +89,12 @@ char processIP::ValidateInput(const char** validCommands, const char** validKeys
 			KeyNumber = i;
 		}
 	}
-	std::cout <<"KeyNumber: " <<KeyNumber <<"\n";
+	//std::cout <<"KeyNumber: " <<KeyNumber <<"\n";
 
 	for(i=0;i<NumberofParam-2;i++)
 		Param[i] = value[i];
 	FunctionNumber = CommandNumber * 100 + KeyNumber;
-	std::cout << "FunctionNumber: " << FunctionNumber << "\n";
+	//std::cout << "FunctionNumber: " << FunctionNumber << "\n";
 
 	return true;
 }

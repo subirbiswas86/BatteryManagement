@@ -20,14 +20,14 @@
  * @param void
  * @return void
  */
-SingleBatt::SingleBatt()
+cSingleBatt::cSingleBatt()
 {
 	Capacity = 800*3600;		//800 mAH
 	SeriesResistance = 0.001; 	//10 mOhm
 	InitialVoltage = 12;		//12 V
 	Shift = 10;
 	Drop = 5;
-	AttachedTo = (Battery*)0;
+	AttachedTo = (cBattery*)0;
 	Locked = false;
 }
 /**
@@ -41,7 +41,7 @@ SingleBatt::SingleBatt()
  * @return bool true if successfully set the initial voltage
  * false if the cell is locked.
  */
-bool SingleBatt::setInitialVoltage(double initv)
+bool cSingleBatt::setInitialVoltage(double initv)
 {
 	if(Locked)
 		return false;
@@ -60,7 +60,7 @@ bool SingleBatt::setInitialVoltage(double initv)
  * @return bool true if successfully set the series resistance
  * false if the cell is locked.
  */
-bool SingleBatt::setSeriesResistance(double sres)
+bool cSingleBatt::setSeriesResistance(double sres)
 {
 	if(Locked)
 		return false;
@@ -79,7 +79,7 @@ bool SingleBatt::setSeriesResistance(double sres)
  * @return bool true if successfully set the capacity
  * false if the cell is locked.
  */
-bool SingleBatt::setCapacity(double cap)
+bool cSingleBatt::setCapacity(double cap)
 {
 	if(Locked)
 		return false;
@@ -94,7 +94,7 @@ bool SingleBatt::setCapacity(double cap)
  * @return bool true if successfully locked.
  * false if it is already locked
  */
-bool SingleBatt::lock(Battery* owner)
+bool cSingleBatt::lock(cBattery* owner)
 {
 	if(Locked)
 		return false;
@@ -110,13 +110,13 @@ bool SingleBatt::lock(Battery* owner)
  * @return bool true if successfully unlocked.
  * false if owner does not own the battery or it is not locked
  */
-bool SingleBatt::unlock(Battery* owner)
+bool cSingleBatt::unlock(cBattery* owner)
 {
 	if(!Locked)
 		return false;
 	if(AttachedTo != owner)
 		return false;
-	AttachedTo = (Battery*)0;
+	AttachedTo = (cBattery*)0;
 	Locked = false;
 	return true;
 }
@@ -127,7 +127,7 @@ bool SingleBatt::unlock(Battery* owner)
  * @param void
  * @return double voltage in Volts
  */
-double SingleBatt::getInitialVoltage(void)
+double cSingleBatt::getInitialVoltage(void)
 {
 	double result;
 	mtx.lock();
@@ -144,7 +144,7 @@ double SingleBatt::getInitialVoltage(void)
  * @param void
  * @return double resistance in Ohms
  */
-double SingleBatt::getSeriesResistance(void)
+double cSingleBatt::getSeriesResistance(void)
 {
 	double result;
 	mtx.lock();
@@ -160,7 +160,7 @@ double SingleBatt::getSeriesResistance(void)
  * @param void
  * @return double current in A
  */
-double SingleBatt::getSourceCurrent(void)
+double cSingleBatt::getSourceCurrent(void)
 {
 	double result;
 	mtx.lock();
@@ -175,7 +175,7 @@ double SingleBatt::getSourceCurrent(void)
  * @param void
  * @return double capacity of the cell in mAH
  */
-double SingleBatt::getCapacity(void)
+double cSingleBatt::getCapacity(void)
 {
 	double result;
 	mtx.lock();
@@ -190,7 +190,7 @@ double SingleBatt::getCapacity(void)
  * @param void
  * @return double remaining capacity as percentage.
  */
-double SingleBatt::getRemainingCapacityPercentage(void)
+double cSingleBatt::getRemainingCapacityPercentage(void)
 {
 	return RemainigCapacity;
 }
@@ -202,7 +202,7 @@ double SingleBatt::getRemainingCapacityPercentage(void)
  * @param void
  * @return void
  */
-void SingleBatt::initialise(void)
+void cSingleBatt::initialise(void)
 {
 	mtx.lock();
 	m1 = (InitialVoltage * Drop) / (Capacity * Shift);
@@ -230,7 +230,7 @@ void SingleBatt::initialise(void)
  * @return true if Successfully update the cell.false if
  * The cell is not owned by the battery or runtime is 0
  */
-bool SingleBatt::update(Battery* owner,bool connected, double scurrent, double runtime)
+bool cSingleBatt::update(cBattery* owner,bool connected, double scurrent, double runtime)
 {
 	if(AttachedTo != owner)
 		return false;
@@ -251,7 +251,7 @@ bool SingleBatt::update(Battery* owner,bool connected, double scurrent, double r
 	{
 		//Gradient = m2;
 		//ConstantK += (m2 - m1)*DischargedCapacity;
-		ConstantK += (m1)*DischargedCapacity;
+		ConstantK += m1 * DischargedCapacity;
 	}
 
 	mtx.unlock();
@@ -267,7 +267,7 @@ bool SingleBatt::update(Battery* owner,bool connected, double scurrent, double r
  * @param owner Pointer to the Battery pack that the caell is attached to
  * @return true if successfuly loaded the default values.false if The battrey does not own the cell.
  */
-bool SingleBatt::loadDefaults(Battery* owner)
+bool cSingleBatt::loadDefaults(cBattery* owner)
 {
 	if(owner != AttachedTo)
 		return false;
@@ -291,12 +291,12 @@ bool SingleBatt::loadDefaults(Battery* owner)
  * @param void
  * @return double current voltage in Volts
  */
-double SingleBatt::getCurrentVoltage(void)
+double cSingleBatt::getCurrentVoltage(void)
 {
 	double result;
-	AccessSynchroniser.lock();
+	mtx.lock();
 	result = CurrentVoltage;
-	AccessSynchroniser.unlock();
+	mtx.unlock();
 	return result;
 }
 

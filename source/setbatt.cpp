@@ -23,9 +23,9 @@
  * @param void
  * @return void
  */
-Battery::Battery()
+cBattery::cBattery()
 {
-	count = 0;
+	count = 3;
 	Vout = 0;
 	Iout = 0;
 	ElapsedTime = 0;
@@ -45,7 +45,7 @@ Battery::Battery()
  * @return false If the switch is off
  * @see Switch
  */
-char Battery::getSwitchStatus(int cell)
+char cBattery::getSwitchStatus(int cell)
 {
 	bool result;
 	mtx.lock();
@@ -64,7 +64,7 @@ char Battery::getSwitchStatus(int cell)
  * @return elapsed time in milisecond
  * @see ElapsedTime
  */
-double Battery::getElapsedTime(void)
+double cBattery::getElapsedTime(void)
 {
 	double result;
 	mtx.lock();
@@ -85,12 +85,12 @@ double Battery::getElapsedTime(void)
  * @return true successfully started to run the battery
  * @return false battery is already runing
  */
-bool Battery::run(double load,double resolution,double speed)
+bool cBattery::run(double load,double resolution,double speed)
 {
 	if(IsRunning())
 		return false;
 	SimState.lock();
-	Runner = new std::thread(&Battery::runBattery, this, load, resolution, speed);
+	Runner = new std::thread(&cBattery::runBattery, this, load, resolution, speed);
 	return true;
 }
 
@@ -102,7 +102,7 @@ bool Battery::run(double load,double resolution,double speed)
  * @return true successsfully stopped the battery
  * @return false battery wasnot running
  */
-bool Battery::stop(void)
+bool cBattery::stop(void)
 {
 	if(IsRunning())
 	{
@@ -120,7 +120,7 @@ bool Battery::stop(void)
  * @param void
  * @return the output voltage in volt
  */
-double Battery::getVout(void)
+double cBattery::getVout(void)
 {
 	double result;
 	mtx.lock();
@@ -135,13 +135,33 @@ double Battery::getVout(void)
  * @param void
  * @return the output current in mini Ampere (mA)
  */
-double Battery::getIout(void)
+double cBattery::getIout(void)
 {
 	double result;
 	mtx.lock();
 	result = Iout;
 	mtx.unlock();
 	return (result*1000);
+}
+
+/**
+ * @brief Adds a cell to the battery
+ *
+ * Addes a cell to the battery if it is not ruuning and not full.
+ *
+ * @param cCell* Adcell Pointer to a cell object
+ * @return true successfully added the cell
+ * @return false battery is running or the battery is full
+ * @see cCell
+ */
+bool cBattery::addCell(cSingleBatt* AdCell)
+{
+	if(IsRunning())
+		return false;
+	if(count>=3)
+		return false;
+	Cell[count++] = AdCell;
+	return true;
 }
 
 /**
@@ -153,7 +173,7 @@ double Battery::getIout(void)
  * @return false Battery is not running
  * @see ContinueRunnig
  */
-bool Battery::IsRunning(void)
+bool cBattery::IsRunning(void)
 {
 	return ContinueRunning();
 }
@@ -170,13 +190,15 @@ bool Battery::IsRunning(void)
  * @see IsRunning
  * @see SimulatorState
  */
-bool Battery::ContinueRunning(void)
+bool cBattery::ContinueRunning(void)
 {
 	if(SimState.try_lock())
 	{
 		SimState.unlock();
+		std::cout << "Test start1";
 		return false;
 	}
+	std::cout << "Test start2";
 	return true;
 }
 
@@ -192,18 +214,18 @@ bool Battery::ContinueRunning(void)
  * @param double speed		Speed of the calculation. reduces the wait time between two calculations.
  * @return void
  */
-void Battery::runBattery(double load, double resolution, double speed)
+void cBattery::runBattery(double load, double resolution, double speed)
 {
 	if(resolution == 0 || speed == 0 || load == 0)
 		return;
-	//bool status = false;
+	bool status = false;
 	int i;
 	double seriesResistance[count];
-	for(i=0; i<count; i++)
+	for(i=0; i<3; i++)
 	{
-		//status = Cell[i]->lock(this);
-		//if(!status)
-		//	return;
+		status = Cell[i]->lock(this);
+		if(!status)
+			return;
 		seriesResistance[i] = Cell[i]->getSeriesResistance();
 	}
 
@@ -217,80 +239,68 @@ void Battery::runBattery(double load, double resolution, double speed)
 	double sourceCurrent[count];
 	double ratio;
 
-	FILE* logFile;
-	logFile = fopen("./batsim.log","a");
-
-	fprintf(logFile,"***************************************************\n");
-	fprintf(logFile,"\t\t\tBattery Simulator\n");
-	fprintf(logFile,"***************************************************\n");
-	fprintf(logFile,"\n[%9.3f]\tSimulator Started\n",ElapsedTime/1000);
-
 	while(ContinueRunning())
 	{
-
-		fprintf(logFile,"\n[%9.3f]\toutVolt: %f\tIout: %f\n\tCell 1:: %d: %f V,\t%f mA\n\tCell 2:: %d: %f V,\t%f mA\n\tCell 3:: %d: %f V,\t%f mA\n",
-			ElapsedTime/1000,Vout,Iout*1000,Switch[0],Cell[0]->getCurrentVoltage(),Cell[0]->getSourceCurrent()*1000,Switch[1],Cell[1]->getCurrentVoltage(),Cell[1]->getSourceCurrent()*1000,Switch[2],Cell[2]->getCurrentVoltage(),Cell[2]->getSourceCurrent()*1000);
-
-	for(i=0;i<count;i++)
-	{
-		localSwitch[i] = false;
-		sortedCells[i] = i;
-		cellVoltages[i] = Cell[i]->getCurrentVoltage();
-		tempVoltages[i] = cellVoltages[i];
-	}
-
-	for(i=0;i<count;i++)
-	{
-		for(j=i+1;j<count;j++)
+		std::cout << "Test start1";
+		for(i=0;i<count;i++)
 		{
-			if(tempVoltages[i]<tempVoltages[j])
+			localSwitch[i] = false;
+			sortedCells[i] = i;
+			cellVoltages[i] = Cell[i]->getCurrentVoltage();
+			tempVoltages[i] = cellVoltages[i];
+		}
+
+		for(i=0;i<count;i++)		//rearrange as big to small
+		{
+			for(j=i+1;j<count;j++)
 			{
-				iTemp=sortedCells[i];
-				dTemp=tempVoltages[i];
-				sortedCells[i]=sortedCells[j];
-				tempVoltages[i]=tempVoltages[j];
-				sortedCells[j]=iTemp;
-				tempVoltages[j]=dTemp;
+				if(tempVoltages[i]<tempVoltages[j])
+				{
+					iTemp=sortedCells[i];
+					dTemp=tempVoltages[i];
+					sortedCells[i]=sortedCells[j];
+					tempVoltages[i]=tempVoltages[j];
+					sortedCells[j]=iTemp;
+					tempVoltages[j]=dTemp;
+				}
 			}
 		}
-	}
 
-	localSwitch[sortedCells[0]] = true;
-	outVolt = cellVoltages[sortedCells[0]];
-	for(i=1;i<count;i++)
-	{
-		if((cellVoltages[sortedCells[0]] - cellVoltages[sortedCells[i]])<=tollarance)
+		localSwitch[sortedCells[0]] = true;
+		outVolt = cellVoltages[sortedCells[0]];
+		for(i=1;i<count;i++)
 		{
-			localSwitch[sortedCells[i]] = true;
-			outVolt = cellVoltages[sortedCells[i]];
+			if((cellVoltages[sortedCells[0]] - cellVoltages[sortedCells[i]]) <= tollarance)
+			{
+				localSwitch[sortedCells[i]] = true;
+				outVolt = cellVoltages[sortedCells[i]];
+			}
 		}
-	}
-	ratio = 0;
-	for(i=0;i<count;i++)
-	{
-		if(localSwitch[i])
-			ratio += cellVoltages[i]/seriesResistance[i];
-	}
+		ratio = 0;
+		for(i=0;i<count;i++)
+		{
+			if(localSwitch[i])
+				ratio += cellVoltages[i]/seriesResistance[i];
+		}
 
-	mtx.lock();
-	Vout = outVolt;
-	Iout = Vout / load;
+		mtx.lock();
+		Vout = outVolt;
+		Iout = Vout / load;
 
-	for(i=0;i<count;i++)
-	{
-		if(localSwitch[i])
-			sourceCurrent[i] = (Iout*cellVoltages[i])/(ratio * seriesResistance[i]);
-		else
-			sourceCurrent[i] = 0;
-		Switch[i] = localSwitch[i];
-		Cell[i]->update(this,localSwitch[i],sourceCurrent[i],resolution);
-	}
-	mtx.unlock();
-
+		for(i=0;i<count;i++)
+		{
+			if(localSwitch[i])
+				sourceCurrent[i] = (Iout*cellVoltages[i])/(ratio * seriesResistance[i]);
+			else
+				sourceCurrent[i] = 0;
+			Switch[i] = localSwitch[i];
+			Cell[i]->update(this,localSwitch[i],sourceCurrent[i],resolution);
+		}
+		mtx.unlock();
 		//sleep for Inteval
 		usleep(resolution*1000/speed);
 		mtx.lock();
-		ElapsedTime += resolution;
+		ElapsedTime += resolution;		
 		mtx.unlock();
 
 		//if total voltage < MIN, break;
@@ -300,12 +310,10 @@ void Battery::runBattery(double load, double resolution, double speed)
 				localSwitch[i] = false;
 			SimState.unlock();
 			std::cout<<"\nBattery exhausted\nSimulation completed\n";
-			fprintf(logFile,"ALERT :: exhausted\n");
 			std::cout<<"BatSim >> ";
 		}
 	}
-	fprintf(logFile,"\n[%9.3f]\tSimulator Stopped\n",ElapsedTime/1000);
-	fcloseall();
+	
 	for(i =0;i<count;i++)
 		Cell[0]->unlock(this);
 	return;
