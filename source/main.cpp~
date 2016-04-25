@@ -1,0 +1,109 @@
+
+#include "../header/processip.hpp"
+#include "../header/functiondef.hpp"
+#include <stdio.h>
+#include <iostream>
+#include <iomanip>
+#include <string.h>
+
+
+
+const char* validCommands[] = {"get","set","sim","help","exit",(char*)0};
+const char* validKeys[] = {"initvoltage","seriesres","loadres","voltage","cutoff","start","stop","capacity","shift","drop",(char*)0}; 
+
+int main (void)
+{
+	processIP inputdata;
+	char exit_loop = false;
+	int Function = 0;
+
+	
+	std::cout <<"Assignment for Battery Simulation\n";
+	
+
+	while(!exit_loop)
+	{
+		if(inputdata.getInput())
+		{
+			if(inputdata.ValidateInput(validCommands,validKeys))
+			{
+				Function = inputdata.getFunctionNumber();
+
+				switch(Function)
+				{
+					case GETVOLT:
+
+					break;
+
+					case GETSERISR:
+
+					break;
+
+					case GETLOADR:
+
+					break;
+
+					case GETINITV:
+
+					break;
+
+					case GETCUTOFF:
+
+					break;
+
+					case GETCAP:
+
+					break;
+
+					case GETSHIFT:
+
+					break;
+
+					case GETDROP:
+
+					break;
+
+					case SETSRES:
+
+					break;
+
+					case SETLOAD:
+
+					break;
+
+					case SETINTV:
+
+					break;
+
+					case SIMSTART:
+
+					break;
+
+					case SIMSTOP:
+
+					break;
+
+					case HELP:
+
+					break;
+
+					case EXIT:
+						exit_loop = true;
+					break;
+
+					default:
+						if(Function >=500)
+							std::cout <<inputdata.getLastCommand() <<" is not a valid Command" <<std::endl;
+						else
+							std::cout <<inputdata.getLastKey() <<" is not a valid key for " 							<<inputdata.getLastCommand() <<" command" <<std::endl;
+					break;
+				}
+			}
+		}
+	}
+
+	return 1;
+}
+
+
+

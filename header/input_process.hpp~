@@ -1,0 +1,28 @@
+/**
+ * @file input_process.hpp
+ * @brief Defines the command inputdata class
+ * 
+ * @author Subir Biswas
+ * @date 24/04/2016
+ * @see input_process.cpp
+ */
+
+#ifndef  INPUTDATA_CLASS
+#define  INPUTDATA_CLASS
+
+class inputdata
+{
+	public:	
+		char getInput(void);
+		char ValidateInput(const char** , const char** );
+	private:	
+		char command[20];	//<Holds the command
+		char key[20];		//<Holds the key
+		double value[3];    	//<Holds the initial input parameters
+		int CommandNumber;  	//<Index of the command
+		int KeyNumber;      	//<Index of the key
+		double Param[3];    	//<Holds the parameters (3 at max)
+		int NumberofParam;  	//<Holds the number of parameter
+		int FunctionNumber; 	//<Unique function number from command - key combination
+};
+#endif //INPUTDATA_CLASS
