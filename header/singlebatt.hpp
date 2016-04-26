@@ -1,5 +1,5 @@
 /**
- * @file battery.hpp
+ * @file singlebatt.hpp
  * @brief Defines a battery class.
  *
  * A battery is consist of three cells and switches.
@@ -9,7 +9,7 @@
  *
  * @author Subir Biswas
  * @date 24/04/2016
- * @see battery.cpp
+ * @see singlebatt.cpp
  */
 #ifndef  BATTERYSIN_CLASS
 #define  BATTERYSIN_CLASS
@@ -17,12 +17,11 @@
 //forword declaration of Battery class
 class cBattery;
 
-#include <thread>	// std::thread
 #include <mutex>	// std::mutex
 
 
 /**
- * @brief defines a battery
+ * @brief defines a signle battery
  *
  * get & set different values
  *
@@ -44,8 +43,7 @@ class cSingleBatt
 		double getSourceCurrent(void);
 		double getCapacity(void);
 		double getRemainingCapacityPercentage(void);
-		bool loadDefaults(cBattery* owner);
-		void initialise(void);
+		bool loadDefaults(cBattery* owner);		
 		double getCurrentVoltage(void);
 	private:
 		bool Locked;				///<Denotes the cell is connected to a battery and the parameters are locked
@@ -62,6 +60,7 @@ class cSingleBatt
 		double RemainigCapacity;	///<Percentage of capacity remaining. (%)
 		double SourceCurrent;		///<Current sourced by the cell in Ampere.
 		double CurrentVoltage;		///<Current voltage of the cell in Volts.
+		void initialise(void);
 		std::mutex mtx; 		///<Lock to synchronize access to members from different thread and unlock
 
 };

@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['getcapacity',['getCapacity',['../classcSingleBatt.html#afec81f61b909e6e4362aab44637facd8',1,'cSingleBatt']]],
+  ['getcurrentvoltage',['getCurrentVoltage',['../classcSingleBatt.html#af89c3c250879a91d4d98415755060f10',1,'cSingleBatt']]],
+  ['getcutoffvoltage',['getCutOffVoltage',['../classcBattery.html#a128431de31c675266f67b75a6a918c4d',1,'cBattery']]],
+  ['getelapsedtime',['getElapsedTime',['../classcBattery.html#ada8cfadeb5b23f3e1a5910e18704b545',1,'cBattery']]],
+  ['getfunctionnumber',['getFunctionNumber',['../classcprocessIP.html#ab63f67a6b90414a77cb0d14983af0f30',1,'cprocessIP']]],
+  ['getinitialvoltage',['getInitialVoltage',['../classcSingleBatt.html#a8325e67f79267f6ef9c5b9ec644ccf52',1,'cSingleBatt']]],
+  ['getinput',['getInput',['../classcprocessIP.html#a4f764ee93a147490a581bf0d7c2bbf04',1,'cprocessIP']]],
+  ['getiout',['getIout',['../classcBattery.html#a9aa545ae5fca85dbec7acc8da4f569d9',1,'cBattery']]],
+  ['getipparam',['getIPParam',['../classcprocessIP.html#ae9fcf2ec4dfdad69f402b7b2511c4970',1,'cprocessIP']]],
+  ['getlastcommand',['getLastCommand',['../classcprocessIP.html#a4d70bb25f8d385f481fba9cad6b9ea43',1,'cprocessIP']]],
+  ['getlastkey',['getLastKey',['../classcprocessIP.html#ab3b8ad8992a80e7317e10688b779b2b9',1,'cprocessIP']]],
+  ['getload',['getLoad',['../classcSimulation.html#a024992dc4c292008561326c5a89922fa',1,'cSimulation']]],
+  ['getloadresistance',['getLoadResistance',['../classcBattery.html#a805f7fb2f17a7131442676f05af013dc',1,'cBattery']]],
+  ['getparamcount',['getParamCount',['../classcprocessIP.html#a9b327ec13d6b1b3dc8b288483517bae2',1,'cprocessIP']]],
+  ['getremainingcapacitypercentage',['getRemainingCapacityPercentage',['../classcSingleBatt.html#a7975515eeeeb7e49074ba4cf981d03ba',1,'cSingleBatt']]],
+  ['getseriesresistance',['getSeriesResistance',['../classcSingleBatt.html#aafa967e8c7c0eedb25cdaa3f2b1722ab',1,'cSingleBatt']]],
+  ['getsourcecurrent',['getSourceCurrent',['../classcSingleBatt.html#a3e4b251f424b3762f1ca2d7d39b93fad',1,'cSingleBatt']]],
+  ['getswitchstatus',['getSwitchStatus',['../classcBattery.html#ac54846e5ae6d669e4d42fe1f32d3a1b9',1,'cBattery']]],
+  ['getvout',['getVout',['../classcBattery.html#a628a43fd3951f10017df9789f9872986',1,'cBattery']]]
+];

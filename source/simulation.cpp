@@ -23,7 +23,7 @@ cSimulation::cSimulation(void)
 {
 	Resolution = 100;
 	Speed = 1;
-	BatteryConnected = 0;
+	BatteryConnected = false;
 }
 
 /**
@@ -45,7 +45,7 @@ cSimulation::cSimulation(int multiplier, double res)
 		Speed = 1;
 	else
 		Speed = multiplier;
-	BatteryConnected = 0;
+	BatteryConnected = false;
 }
 
 /**
@@ -85,39 +85,9 @@ bool cSimulation::stop(void)
 	if(BatPack->stop())
 	{
 		std::cout<<"battery stopped"<<std::endl;
-		//return (BatPack->reset());
+		return (BatPack->reset());
 	}
 	return false;
-}
-
-/**
- * @brief Pause a simulation
- *
- * Stops a simulation but do not reset the battery state
- * @param void
- * @return bool true if successfully paused a simulation
- * false if simulation is not running or battery is not connected
- */
-bool cSimulation::pause(void)
-{
-	if(!BatteryConnected)
-		return false;
-	if(!BatPack->IsRunning())
-		return false;
-	return (BatPack->stop());
-}
-
-/**
- * @brief resuems a simulation
- *
- * Starts a simulation from where it was stopped
- * @param void
- * @return bool true if successfully starts
- * false if already running or no battery present
- */
-bool cSimulation::resume(void)
-{
-	return start();
 }
 
 /**

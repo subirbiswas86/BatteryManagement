@@ -10,9 +10,18 @@
 #ifndef  PROCESSIP_CLASS
 #define  PROCESSIP_CLASS
 
-class processIP
+/**
+ * @brief defines a user Inputss
+ *
+ * get different user values
+ *
+ * @see processIP
+ **/
+
+class cprocessIP
 {
 	public:	
+		cprocessIP();
 		char getInput(void);
 		char ValidateInput(const char** , const char** );
 		int getFunctionNumber(void);

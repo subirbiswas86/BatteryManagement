@@ -3,6 +3,7 @@
  * @brief Macros for function command
  * 
  * Defines the command that the CLI will accept
+ *
  * @author Subir Biswas
  * @date 24/04/2016
  * @see sim_main.cpp
@@ -18,8 +19,8 @@
 #define GETVOLT		03 //<get battery initial voltage
 #define GETCUTOFF	04 //<get cut off voltage
 #define GETCAP		07 //<get battery capacity
-#define GETSHIFT	05 //<get battery discharge curve top value
-#define GETDROP		06 //<get battery discharge curve bottom value
+#define GETSCURR	05 //<get source current
+#define GETRCAP		06 //<get remaining battery capacity
 #define GETSWTCH	10 //<get switch status
 
 #define SETSRES		101 //<set series resistance <v1> <v2> <V3>

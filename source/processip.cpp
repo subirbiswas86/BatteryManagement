@@ -13,6 +13,17 @@
 #include <string.h>
 
 /**
+ * @brief Constructor of the cparser object
+ * 
+ * @param void
+ * @return void
+ */
+cprocessIP::cprocessIP()
+{
+
+}
+
+/**
  * @brief Gets input from user
  * 
  * gets user input and fills the command, key and values
@@ -21,7 +32,7 @@
  * @return char true if user successfully given the data
  * and false if failed to get the input 
  */
-char processIP::getInput(void)
+char cprocessIP::getInput(void)
 {
 	char* buffer = new char[100];
 	size_t len = 100;
@@ -55,7 +66,7 @@ char processIP::getInput(void)
  * @return char true if successfully validate
  * false if number of user input parameter is less than 1 or valid command or key is NULL
  */
-char processIP::ValidateInput(const char** validCommands, const char** validKeys)
+char cprocessIP::ValidateInput(const char** validCommands, const char** validKeys)
 {
 	int i;
 
@@ -106,7 +117,7 @@ char processIP::ValidateInput(const char** validCommands, const char** validKeys
  * @param void
  * @return double the parameter at index
  */
-int processIP::getFunctionNumber(void)
+int cprocessIP::getFunctionNumber(void)
 {
 	return FunctionNumber;
 }
@@ -117,7 +128,7 @@ int processIP::getFunctionNumber(void)
  * @param void
  * @return char* the last command
  */
-char* processIP::getLastCommand(void)
+char* cprocessIP::getLastCommand(void)
 {
 	return command;
 }
@@ -128,7 +139,7 @@ char* processIP::getLastCommand(void)
  * @param void
  * @return char* The key
  */
-char* processIP::getLastKey(void)
+char* cprocessIP::getLastKey(void)
 {
 	return key;
 }
@@ -139,7 +150,7 @@ char* processIP::getLastKey(void)
  * @param void
  * @return int number of parameter
  */
-int processIP::getParamCount(void)
+int cprocessIP::getParamCount(void)
 {
 	if((NumberofParam - 2)<0)
 		return 0;
@@ -153,7 +164,7 @@ int processIP::getParamCount(void)
  * @param int index of the parameter to be returned
  * @return double the parameter at index
  */
-double processIP::getIPParam(int index)
+double cprocessIP::getIPParam(int index)
 {
 	return Param[index];
 }

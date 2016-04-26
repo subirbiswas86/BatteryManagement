@@ -1,5 +1,5 @@
 /**
- * @file battery.cpp
+ * @file setbatt.cpp
  * @brief Defines a battery class.
  *
  * A battery is consist of three cells and switches.
@@ -9,12 +9,13 @@
  *
  * @author Subir Biswas
  * @date 24/04/2016
- * @see battery.hpp
+ * @see setbatt.hpp
  */
 
 #include "../header/setbatt.hpp"
 #include <unistd.h>
-#include <iostream> ///<for writing to the log file
+#include <iostream> 
+#include <thread>	// std::thread
 
 /**
  * @brief Constructor of a Battery pack object
@@ -25,16 +26,15 @@
  */
 cBattery::cBattery()
 {
-	count = 3;
+	count = 0;
 	Vout = 0;
 	Iout = 0;
 	ElapsedTime = 0;
-	CutOffVoltage = 8;
+	CutOffVoltage = 8;	//cut-off at 8 volts
 	tollarance = 0.005; //50mV
 	SimState.unlock();
 	for(int i=0; i<3; i++)
-		Switch[i] = false;
-		
+		Switch[i] = false;		
 }
 
 /**
@@ -71,6 +71,35 @@ double cBattery::getElapsedTime(void)
 	result = ElapsedTime;
 	mtx.unlock();
 	return result;
+}
+
+/**
+ * @brief Resets the battery and its cells
+ *
+ * Resets the battery to initial state.
+ * Resets the connected cells. Resets Elapsed time to 0.
+ *
+ * @param void
+ * @return true  successsfully reseted the battery.
+ * @return false failed to reset one or more connected cell.
+ */
+bool cBattery::reset(void)
+{
+	bool status = false;
+	bool lockStatus = false;
+	for(int i=0; i<count; i++)
+	{
+		lockStatus = Cell[i]->lock(this);
+		status = Cell[i]->loadDefaults(this);
+		if(!status)
+			break;
+		if(lockStatus)
+			Cell[i]->unlock(this);
+	}
+	ElapsedTime = 0;
+	Vout = 0;
+	Iout = 0;
+	return status;
 }
 
 /**
@@ -145,6 +174,21 @@ double cBattery::getIout(void)
 }
 
 /**
+ * @brief returns the Battery simulator cut off voltage
+ *
+ * @param void
+ * @return the output voltage in volts (V)
+ */
+double cBattery::getCutOffVoltage(void)
+{
+	double result;
+	mtx.lock();
+	result = CutOffVoltage;
+	mtx.unlock();
+	return result;
+}
+
+/**
  * @brief Adds a cell to the battery
  *
  * Addes a cell to the battery if it is not ruuning and not full.
@@ -195,10 +239,9 @@ bool cBattery::ContinueRunning(void)
 	if(SimState.try_lock())
 	{
 		SimState.unlock();
-		std::cout << "Test start1";
 		return false;
 	}
-	std::cout << "Test start2";
+	//std::cout << "Test start2";
 	return true;
 }
 
@@ -241,7 +284,7 @@ void cBattery::runBattery(double load, double resolution, double speed)
 
 	while(ContinueRunning())
 	{
-		std::cout << "Test start1";
+		//std::cout << "Test case1";
 		for(i=0;i<count;i++)
 		{
 			localSwitch[i] = false;
@@ -310,7 +353,7 @@ void cBattery::runBattery(double load, double resolution, double speed)
 				localSwitch[i] = false;
 			SimState.unlock();
 			std::cout<<"\nBattery exhausted\nSimulation completed\n";
-			std::cout<<"BatSim >> ";
+			std::cout<<"MybatSim >> ";
 		}
 	}
 	

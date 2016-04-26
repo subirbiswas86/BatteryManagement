@@ -26,8 +26,6 @@ class cSimulation
 		cSimulation(int,double);
 		bool start(void);
 		bool stop(void);
-		bool pause(void);
-		bool resume(void);
 		bool setSpeed(int);
 		bool setResolution(double);
 		bool connect(cBattery*);

@@ -1,5 +1,5 @@
 /**
- * @file battery.hpp
+ * @file setbatt.hpp
  * @brief Defines a battery class.
  *
  * A battery is consist of three cells and switches.
@@ -9,8 +9,9 @@
  *
  * @author Subir Biswas
  * @date 24/04/2016
- * @see battery.cpp
+ * @see setbatt.cpp
  */
+
 #ifndef  BATTERYSET_CLASS
 #define  BATTERYSET_CLASS
 
@@ -33,18 +34,17 @@ class cBattery
 {
 	public:
 		cBattery();
+		bool reset(void);
 		bool run(double load,double resolution,double speed);
 		bool stop(void);
 		double getVout(void);
 		double getIout(void);
-		bool setCutOffVoltage(double cutoff);
 		double getElapsedTime(void);
 		bool addCell(cSingleBatt* AdCell);
 		char getSwitchStatus(int Cell);
 		bool IsRunning(void);
 		double getLoadResistance(void);
-		bool getShiftingPoints(void);
-		bool getDropAmounts(void);
+		double getCutOffVoltage(void);
 
 	private:
 		cSingleBatt *Cell[3];		///<Holds the cells that are added. @see addCell
@@ -58,7 +58,7 @@ class cBattery
 		std::mutex SimState;		///<Used to signal thread terminaton event
 		void runBattery(double load,double resolution,double speed);
 		bool ContinueRunning(void);
-		int count = 3;				///<number of cells added in the battery
+		int count;				///<number of cells added in the battery
 		std::mutex mtx; 		///<Lock to synchronize access to members from different thread and unlock
 
 		

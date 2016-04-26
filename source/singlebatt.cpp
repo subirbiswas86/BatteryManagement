@@ -1,15 +1,16 @@
 /**
- * @file cell.cpp
- * @brief Implementation of the cell class
+ * @file singlebatt.cpp
+ * @brief Implementation of the single battery class
  *
  * Cell is the primary element of a battery.
  * A battery contains multiple cells connected in parallel.
  * Characteristics of a cell like discharge curve, capacity
  * etc decides the characteristics of the battery.
  * A cell should be added to a battarey for operation.
- * @author Dipta Pandit
- * @date 3/12/2014
- * @see cell.hpp
+ * 
+ * @author Subir Biswas
+ * @date 24/04/2016
+ * @see singlebatt.hpp
  */
 #include "../header/singlebatt.hpp"
 
@@ -246,12 +247,6 @@ bool cSingleBatt::update(cBattery* owner,bool connected, double scurrent, double
 	DischargedCapacity += (SourceCurrent * runtime);
 	RemainigCapacity = ((Capacity - DischargedCapacity) / Capacity) * 100;
 	CurrentVoltage = CurrentVoltage - Gradient*SourceCurrent*runtime + ConstantK;
-
-	//if((Gradient == m1) && (DischargedCapacity >= ((Shift*Capacity)/100)))
-	//{
-	//	ConstantK += m1 * DischargedCapacity;
-	//}
-
 	mtx.unlock();
 	return true;
 }
