@@ -26,8 +26,8 @@ cSingleBatt::cSingleBatt()
 	Capacity = 800*3600;		//800 mAH
 	SeriesResistance = 0.001; 	//10 mOhm
 	InitialVoltage = 12;		//12 V
-	Shift = 10;
-	Drop = 5;
+	Shift = 95;	//95 % of voltage or capacity
+	Drop = 10;	//20 % of voltage or capacity
 	AttachedTo = (cBattery*)0;
 	Locked = false;
 }
@@ -206,8 +206,7 @@ double cSingleBatt::getRemainingCapacityPercentage(void)
 void cSingleBatt::initialise(void)
 {
 	mtx.lock();
-	m1 = (InitialVoltage * Drop) / (Capacity * Shift);
-
+	m1 = ((InitialVoltage * Shift) - (InitialVoltage * Drop)) / ((Capacity * Shift) - (Capacity * Drop)); //based on y=mx+c 
 	CurrentVoltage = InitialVoltage;
 	DischargedCapacity = 0;
 	RemainigCapacity = 100;

@@ -1,15 +1,16 @@
 /**
- * @file cell.cpp
- * @brief Implementation of the cell class
+ * @file singlebatt.cpp
+ * @brief Implementation of the single battery class
  *
  * Cell is the primary element of a battery.
  * A battery contains multiple cells connected in parallel.
  * Characteristics of a cell like discharge curve, capacity
  * etc decides the characteristics of the battery.
  * A cell should be added to a battarey for operation.
- * @author Dipta Pandit
- * @date 3/12/2014
- * @see cell.hpp
+ * 
+ * @author Subir Biswas
+ * @date 24/04/2016
+ * @see singlebatt.hpp
  */
 #include "../header/singlebatt.hpp"
 
@@ -25,8 +26,8 @@ cSingleBatt::cSingleBatt()
 	Capacity = 800*3600;		//800 mAH
 	SeriesResistance = 0.001; 	//10 mOhm
 	InitialVoltage = 12;		//12 V
-	Shift = 10;
-	Drop = 5;
+	Shift = 95;	//95 % of voltage or capacity
+	Drop = 10;	//20 % of voltage or capacity
 	AttachedTo = (cBattery*)0;
 	Locked = false;
 }
@@ -205,8 +206,7 @@ double cSingleBatt::getRemainingCapacityPercentage(void)
 void cSingleBatt::initialise(void)
 {
 	mtx.lock();
-	m1 = (InitialVoltage * Drop) / (Capacity * Shift);
-
+	m1 = ((InitialVoltage * Shift) - (InitialVoltage * Drop)) / ((Capacity * Shift) - (Capacity * Drop));
 	CurrentVoltage = InitialVoltage;
 	DischargedCapacity = 0;
 	RemainigCapacity = 100;
@@ -246,14 +246,6 @@ bool cSingleBatt::update(cBattery* owner,bool connected, double scurrent, double
 	DischargedCapacity += (SourceCurrent * runtime);
 	RemainigCapacity = ((Capacity - DischargedCapacity) / Capacity) * 100;
 	CurrentVoltage = CurrentVoltage - Gradient*SourceCurrent*runtime + ConstantK;
-
-	if((Gradient == m1) && (DischargedCapacity >= ((Shift*Capacity)/100)))
-	{
-		//Gradient = m2;
-		//ConstantK += (m2 - m1)*DischargedCapacity;
-		ConstantK += m1 * DischargedCapacity;
-	}
-
 	mtx.unlock();
 	return true;
 }

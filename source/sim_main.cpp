@@ -52,8 +52,8 @@ void showHelp(void)
 			\n\tSeries resistances: 20 Ohm,  30 Ohm,  40 Ohm\
 			\n\tLoad              : 150 Ohm\
 			\n\tCapacity          : 800 mAH\
-			\n\tshift             : 10\
-			\n\tdrop              : 5\
+			\n\tshift             : 95 %\
+			\n\tdrop              : 10 %\
 			\n\tCutoff voltage    : 8 V\n";
 	return;
 }
@@ -96,6 +96,7 @@ int main (void)
 	Simulator.setSpeed(100000);
 	Simulator.setResolution(10);
 
+	std::system("clear");
 	std::cout <<"Assignment for Battery Simulation\n";
 	
 
