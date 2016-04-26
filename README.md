@@ -23,7 +23,7 @@ Contents
 4.2.1 	Commands and Keywords
 
 
-1. REQUIREMENTS
+<h2>1. REQUIREMENTS<h2>
 
 The requirement is to design a battery balancing algorithm for a battery pack for the discharge cycle and implement a simulator for testing it.
 
@@ -38,7 +38,7 @@ The simulator would provide an API for
 	8. The code is runnable on a Linux machine
 	
 
-2. DESIGN
+<h2>2. DESIGN<h2>
 
 The system has a simulator program and a battery pack present in the system. Also there is a driver function to run the simulator. So the system is divided into three parts:
 	1. The Battery Pack
@@ -46,7 +46,7 @@ The system has a simulator program and a battery pack present in the system. Als
 	3. The driver program
 
 2.1 The Battery Pack
-The battery pack is the main component of the system. A battery pack consists 3 different batteries and equal number of switches. A battery pack can be connected with a load and then it will run the circuit and update individual battries and switches status.
+The battery pack is the main component of the system. A battery pack consists 3 different batteries and equal number of switches. A battery pack can be connected with a load and then it will run the circuit and update individual batteries and switches status.
 
 2.1.1 Batteries
 The batteries is the fundamental element of a battery pack. A battery consists of a voltage source and an internal series resistance. The battery has its own characteristics like discharge curve, capacity and voltage.
@@ -59,7 +59,7 @@ Start API resembles connecting the battery with a load making a closed circuit. 
 The driver program creates the environment to run the simulator. This program implements a command line interpreter that will take user input and perform necessary action. This program creates the cells and battery. connects them to a simulator, and passes user commands to simulator. 
 
 
-3. IMPLEMENTATION
+<h2>3. IMPLEMENTATION<h2>
 
 The implementation of the above design consists of four classes, namely, Singlebatt, Battery, Simulation and ProcessIP. Singlebatt and Battery are the two most important components that actually implements the balancing algorithm and battery pack. The simulation and the processIP are used to demonstrate the user entered data.
 
@@ -79,10 +79,10 @@ m1 = ((initial voltage*shift) - (initial voltage*drop)) / ((capacity*shift) - (C
 This equation is used to calculate the voltage of the cell at any point.
 
 3.2 Battery
-The Battery resembles a battery pack with 3 battries. This implementation assumes three battries are present in a battery pack. Other than the battries, the battery pack has switches for each battry to connect or disconnect it. The battery provides a output voltage and when connected to a load also the output current.
+The Battery resembles a battery pack with 3 batteries. This implementation assumes three batteries are present in a battery pack. Other than the batteries, the battery pack has switches for each battery to connect or disconnect it. The battery provides a output voltage and when connected to a load also the output current.
 The design assumes that the output voltage is the voltage of the connected battery that has minimum battery voltage. It also assumes that the internal series resistance are negligible compared to the connected load. 
 The source current of the connected cells are calculated by dividing the output current in a ratio that is directly proportional to the potential difference and inversely proportional to the internal series resistance.
-The battery pack provides APIs to set battry voltages, series resistance, load resistance and get switch states, output voltage and current, and run, stop and reset the battery.
+The battery pack provides APIs to set battery voltages, series resistance, load resistance and get switch states, output voltage and current, and run, stop and reset the battery.
 The battery actually implements the balancing algorithm by operating the switches when the battery is connected to a load and running, i.e. closed circuit.
 
 3.3 Simulation
@@ -98,7 +98,7 @@ The driver program prepares the environment for testing the simulator. It create
 The driver program is responsible for taking user input, processing it, taking appropriate actions and formatting the output to present to the user back.
 
 
-4. USAGE
+<h2>4. USAGE<h2>
 
 Using this application requires building it in a Linux machine and running. The battery pack and battery classes can also be used in other programs.
 
